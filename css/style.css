@@ -62,12 +62,34 @@ h3 {
     color: #000;
 }
 
+.header .anuncio {
+    background-color: #c7a67c;
+    color: #000;
+    border-radius: 15px;
+    padding: .5em 1em;
+    font-weight: 600;
+}
+
+.header .anuncio:hover {
+    background-color: #000;
+    color: #c7a67c;
+    transition: all .3s;
+    outline: 1px solid #c7a67c;
+}
+
 .content .escort {
     display: flex;
 }
 
 .content .escort li {
     max-width: 25%;
+}
+
+.content .escort li span {
+    display: block;
     overflow: hidden;
     border-radius: 10px;
+    outline: 4px solid #c7a67c;
+    width: calc(100% - 20px);
+    position: relative;
 }
