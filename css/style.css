@@ -6,29 +6,36 @@
     outline: none;
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: #000;
+    background: url(../img/bg.jpg) no-repeat center top #000;
+    background-size: cover;
 }
 
 h1 {
-    color: #c7a67c;
+    color: #E9D5A4;
     font-size: 2.5em;
     font-weight: 200;
 }
 
 h2 {
-    color: #c7a67c;
-    font-size: 2em;
-    font-weight: 200;
-    margin: 1em 0;
+    color: #E9D5A4;
+    font-size: 1.5em;
+    font-weight: 300;
+    margin: 1em 0 0.5em 0;
+    line-height: 1.5em;
 }
 
 h3 {
-    color: #c7a67c;
-    font-size: 1.8em;
-    font-weight: 200;
+    color: #E9D5A4;
+    font-size: 1em;
+    font-weight: 500;
 }
 
 .header, .content, .footer {
@@ -54,16 +61,16 @@ h3 {
 .header .menu a {
     padding: 10px 20px;
     text-transform: uppercase;
-    color: #c7a67c;
+    color: #E9D5A4;
 }
 
 .header .menu a:hover {
-    background-color: #c7a67c;
+    background-color: #E9D5A4;
     color: #000;
 }
 
 .header .anuncio {
-    background-color: #c7a67c;
+    background-color: #E9D5A4;
     color: #000;
     border-radius: 15px;
     padding: .5em 1em;
@@ -72,24 +79,101 @@ h3 {
 
 .header .anuncio:hover {
     background-color: #000;
-    color: #c7a67c;
+    color: #E9D5A4;
     transition: all .3s;
-    outline: 1px solid #c7a67c;
+    outline: 1px solid #E9D5A4;
 }
 
 .content .escort {
     display: flex;
+    justify-content: space-around;
 }
 
 .content .escort li {
-    max-width: 25%;
+    width: 25%;
+    text-align: center;
+    margin-bottom: 2em;
 }
 
-.content .escort li span {
-    display: block;
+.content .escort li .card {
+    display: flex;
     overflow: hidden;
-    border-radius: 10px;
-    outline: 4px solid #c7a67c;
+    border-radius: 3px;
     width: calc(100% - 20px);
-    position: relative;
+    flex-direction: column;
+    outline: 1px solid transparent;
+    transition: all .5s;
+}
+
+.content .premium .escort li:hover .card {
+    outline-color: #E9D5A4;
+}
+
+.content .vip .escort li:hover .card {
+    outline-color: #D691E6;
+}
+
+.content .classic .escort li:hover .card {
+    outline-color: #91E6C8;
+}
+
+.premium h2 {
+    color: #E9D5A4;
+    border-bottom: 1px solid #E9D5A4;
+}
+
+.vip h2 {
+    color: #D691E6;
+    border-bottom: 1px solid #D691E6;
+}
+
+.classic h2 {
+    color: #91E6C8;
+    border-bottom: 1px solid #91E6C8;
+}
+
+.top {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #E9D5A4;
+    text-align: center;
+    color: #000;
+    font-size: 3em;
+}
+
+.picture {
+    height: 300px;
+}
+
+.picture img {
+    object-fit: contain;
+    height: 400px;
+}
+
+.content .escort li .card:hover .picture img {
+    filter: grayscale(.5);
+    transition: all .3s;
+}
+
+.content .escort li .card:hover .info-card {
+    z-index: 1;
+}
+
+.info-card {
+    background: linear-gradient(0deg, #000000d1, #000000b8, #00000000);
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+
+.active {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    background: rgb(0, 249, 0);
 }
