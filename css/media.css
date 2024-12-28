@@ -1,0 +1,65 @@
+@media (min-width: 1024px) {
+    .info-card {
+        margin-top: -105px;
+    }
+
+}
+
+@media (max-width: 1024px) {
+    .header {
+        padding: 20px;
+    }
+
+    .header ul {
+        margin: 15px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+    }
+
+    .picture {
+        height: 100px;
+    }
+
+    .picture img {
+        height: 270px;
+        object-fit: cover;
+    }
+}
+
+@media (max-width: 550px) {
+    .content .escort li {
+        width: 50%;
+    }
+
+    .picture img {
+        width: 100%;
+        object-fit: fill;
+        height: max-content;
+    }
+}
+
+@media (max-width: 380px) {
+    .content .escort li {
+        width: 100%;
+        height: 330px;
+    }
+
+    .content-top {
+        flex-direction: column-reverse;
+    }
+
+    h1 {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 550px) {
+    .gallery img {
+        width: 100%;
+        height: auto;
+    }
+}
