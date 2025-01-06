@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     } else {
         // Si no se pasó un ID, obtener todos los servicios
-        $sql = "SELECT id, descripcion FROM servicios";
+        $sql = "SELECT id, descripcion FROM servicios WHERE id_estado = 1";
         $result = $conn->query($sql);
 
         // Verificar si hay resultados

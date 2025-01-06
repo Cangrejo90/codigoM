@@ -1,5 +1,5 @@
 <?php
-// Incluir el archivo de conexión utilizando require_once
+
 require_once 'conexion.php';
 
 // Encabezados para indicar que la respuesta será en formato JSON
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     } else {
         // Si no se pasó un ID, obtener todos los géneros
-        $sql = "SELECT id, descripcion FROM generos";
+        $sql = "SELECT id, descripcion FROM generos WHERE id_estado = 1";
         $result = $conn->query($sql);
 
         // Verificar si hay resultados
@@ -101,6 +101,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         // Si falta alguno de los campos, devolver un mensaje de error
         echo json_encode(["error" => "Faltan datos necesarios (id, descripcion)"]);
+    }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Si es una solicitud PUT, actualizar la descripción de un género
+
+    // Obtener los datos del cuerpo de la solicitud JSON
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    // Verificar si el ID del género y la nueva descripción están presentes
+    if (isset($data['id'])) {
+        $id = $data['id'];
+
+        // Consulta para actualizar la descripción del género
+        $sql = "UPDATE generos SET id_estado = 0 WHERE id = $id";
+
+        if ($conn->query($sql) === TRUE) {
+            // Si la actualización es exitosa, devolver el ID y la nueva descripción
+            echo json_encode(['id' => $id]);
+        } else {
+            // Si hay un error en la actualización, devolver un mensaje de error
+            echo json_encode(["error" => "Error al actualizar el género: " . $conn->error]);
+        }
+    } else {
+        // Si falta alguno de los campos, devolver un mensaje de error
+        echo json_encode(["error" => "Faltan datos necesarios (id)"]);
     }
 }
 

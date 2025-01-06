@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Verificar si todos los campos necesarios están presentes
-    if (isset($data['descripcion']) && isset($data['descripcion_corta']) && isset($data['nombre']) && isset($data['valor']) && isset($data['telefono']) && isset($data['redes']) && isset($data['edad']) && isset($data['id_ciudad']) && isset($data['id_sector']) && isset($data['id_genero']) && isset($data['medidas']) && isset($data['peso']) && isset($data['altura']) && isset($data['disponible']) && isset($data['visible']) && isset($data['verificada'])) {
+    if (isset($data['nombre']) && isset($data['valor']) && isset($data['telefono']) && isset($data['redes']) && isset($data['edad']) && isset($data['selectCiudad']) && isset($data['selectGenero']) && isset($data['medidas']) && isset($data['peso']) && isset($data['altura']) && isset($data['disponible']) && isset($data['visible']) && isset($data['verificada'])) {
 
         // Preparar los datos para la inserción
         $descripcion = $data['descripcion'];
@@ -65,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $telefono = $data['telefono'];
         $redes = $data['redes'];
         $edad = $data['edad'];
-        $id_ciudad = $data['id_ciudad'];
-        $id_sector = $data['id_sector'];
-        $id_genero = $data['id_genero'];
+        $id_ciudad = $data['selectCiudad'];
+       // $id_sector = $data['id_sector'];
+        $id_genero = $data['selectGenero'];
         $medidas = $data['medidas'];
         $peso = $data['peso'];
         $altura = $data['altura'];
@@ -76,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $verificada = $data['verificada'];
 
         // Consulta para insertar el nuevo perfil
-        $sql = "INSERT INTO perfiles (descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada) 
-                VALUES ('$descripcion', '$descripcion_corta', '$nombre', '$valor', '$telefono', '$redes', $edad, $id_ciudad, $id_sector, $id_genero, '$medidas', $peso, $altura, $disponible, $visible, $verificada)";
+        $sql = "INSERT INTO perfiles (descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_genero, medidas, peso, altura, disponible, visible, verificada) 
+                VALUES ('$descripcion', '$descripcion_corta', '$nombre', '$valor', '$telefono', '$redes', $edad, $id_ciudad, $id_genero, '$medidas', $peso, $altura, $disponible, $visible, $verificada)";
 
         if ($conn->query($sql) === TRUE) {
             // Si la inserción es exitosa, devolver el nuevo perfil con su ID
@@ -91,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'redes' => $redes,
                 'edad' => $edad,
                 'id_ciudad' => $id_ciudad,
-                'id_sector' => $id_sector,
                 'id_genero' => $id_genero,
                 'medidas' => $medidas,
                 'peso' => $peso,
