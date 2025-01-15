@@ -60,6 +60,12 @@
             </div>
 
             <li class="nav-item">
+                <a class="nav-link" href="usuarios.php">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>Usuarios</span></a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="perfiles.php">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Perfiles</span></a>

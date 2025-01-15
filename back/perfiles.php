@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id = $_GET['id'];
 
         // Consulta para obtener el perfil por ID
-        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id = $id";
+        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id = $id AND id_estado = 1";
         $result = $conn->query($sql);
 
         // Verificar si se encontró el perfil
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     } else {
         // Si no se pasó un ID, obtener todos los perfiles
-        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles";
+        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id_estado = 1";
         $result = $conn->query($sql);
 
         // Verificar si hay resultados
@@ -149,6 +149,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         // Si falta alguno de los campos, devolver un mensaje de error
         echo json_encode(["error" => "Faltan datos necesarios"]);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (isset($data['id'])) {
+        $id = $data['id'];
+
+        $sql = "UPDATE perfiles SET id_estado = 0 WHERE id = $id";
+
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(['id' => $id]);
+        } else {
+            echo json_encode(["error" => "Error al actualizar el género: " . $conn->error]);
+        }
+    } else {
+        echo json_encode(["error" => "Faltan datos necesarios (id)"]);
     }
 }
 
