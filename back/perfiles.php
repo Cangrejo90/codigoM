@@ -26,6 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Si no se encuentra el perfil, devolver un mensaje de error
             echo json_encode(["error" => "Perfil no encontrado"]);
         }
+    }else if(isset($_GET['id_usuario'])){
+        $id_usuario = $_GET['id_usuario'];
+
+        // Consulta para obtener el perfil por ID
+        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id_usuario = $id_usuario AND id_estado = 1";
+        $result = $conn->query($sql);
+
+        // Verificar si se encontró el perfil
+        if ($result->num_rows > 0) {
+            // Obtener el perfil
+            $perfil = $result->fetch_assoc();
+            // Devolver el perfil en formato JSON
+            echo json_encode($perfil);
+        } else {
+            // Si no se encuentra el perfil, devolver un mensaje de error
+            echo json_encode(["error" => "Perfil no encontrado"]);
+        }
     } else {
         // Si no se pasó un ID, obtener todos los perfiles
         $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id_estado = 1";
@@ -49,15 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Si es una solicitud POST, insertar un nuevo perfil
-
-    // Obtener los datos del cuerpo de la solicitud JSON
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // Verificar si todos los campos necesarios están presentes
-    if (isset($data['nombre']) && isset($data['valor']) && isset($data['telefono']) && isset($data['redes']) && isset($data['edad']) && isset($data['selectCiudad']) && isset($data['selectGenero']) && isset($data['medidas']) && isset($data['peso']) && isset($data['altura']) && isset($data['disponible']) && isset($data['visible']) && isset($data['verificada'])) {
-
-        // Preparar los datos para la inserción
+    if (isset($data['nombre']) && isset($data['valor']) && isset($data['telefono']) && isset($data['redes']) && isset($data['edad']) && isset($data['selectCiudad']) && isset($data['selectGenero']) && isset($data['medidas']) && isset($data['peso']) && isset($data['altura']) && isset($data['disponible']) && isset($data['visible'])) {
         $descripcion = $data['descripcion'];
         $descripcion_corta = $data['descripcion_corta'];
         $nombre = $data['nombre'];
@@ -73,14 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $altura = $data['altura'];
         $disponible = $data['disponible'];
         $visible = $data['visible'];
-        $verificada = $data['verificada'];
+        $verificada = 0;
 
-        // Consulta para insertar el nuevo perfil
         $sql = "INSERT INTO perfiles (descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_genero, medidas, peso, altura, disponible, visible, verificada) 
                 VALUES ('$descripcion', '$descripcion_corta', '$nombre', '$valor', '$telefono', '$redes', $edad, $id_ciudad, $id_genero, '$medidas', $peso, $altura, $disponible, $visible, $verificada)";
 
         if ($conn->query($sql) === TRUE) {
-            // Si la inserción es exitosa, devolver el nuevo perfil con su ID
             $nuevo_perfil = [
                 'id' => $conn->insert_id, // Obtener el ID generado
                 'descripcion' => $descripcion,

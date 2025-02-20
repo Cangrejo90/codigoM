@@ -1,3 +1,19 @@
+<?php 
+    $id_usuario = 0;
+
+    session_start();
+
+  
+    // Verifica si el usuario no está logueado
+    if (!isset($_SESSION['user_id'])) {
+        // Evita redirigir si ya estás en login.php o logout.php
+        if (basename($_SERVER['PHP_SELF']) !== 'login.php' && basename($_SERVER['PHP_SELF']) !== 'logout.php') {
+            header("Location: login.php");
+            exit();
+        }
+    }
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,6 +40,13 @@
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+    />
+
+
 </head>
 
 <body id="page-top">
@@ -45,12 +68,12 @@
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
+            <!-- Nav Item - Dashboard 
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
-            </li>
+            </li>-->
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -58,19 +81,26 @@
             <div class="sidebar-heading">
                 Paginas
             </div>
+            <?php  if (isset($_SESSION['id_rol']) == 1) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="usuarios.php">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Usuarios</span></a>
+                </li>
+            <?php } ?>
 
             <li class="nav-item">
-                <a class="nav-link" href="usuarios.php">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Usuarios</span></a>
+                <a class="nav-link" href="perfil.php?id_usuario=<?php echo $id_usuario ?>">
+                    <i class="fas fa-fw fa-address-card"></i>
+                    <span>Perfil</span></a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="perfiles.php">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Perfiles</span></a>
-            </li>
-
+            <?php  if (isset($_SESSION['id_rol']) == 1) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="perfiles.php">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Perfiles</span></a>
+                </li>
+            <?php } ?>
             <li class="nav-item">
                 <a class="nav-link" href="configuraciones.php">
                     <i class="fas fa-fw fa-user-cog"></i>
@@ -203,14 +233,14 @@
                        
 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <!--<li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
+                                 Counter - Messages 
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
-                            <!-- Dropdown - Messages -->
+                            Dropdown - Messages 
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
@@ -267,30 +297,33 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
+                        
+                        <div class="topbar-divider d-none d-sm-block"></div>-->
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                <?php echo($_SESSION['correo']); ?>
+                                
+                                </span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="img/undraw_profile_3.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="configuraciones.php">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
+                                    Configuracion
                                 </a>
                             
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Salir
                                 </a>
                             </div>
                         </li>
