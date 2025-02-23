@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id_rol = 3;
         $id_estado = 1;
 
-        $sql = "INSERT INTO usuarios (usuario, password, correo, id_rol, id_estado) VALUES ('$usuario', '$password', '$correo', $id_rol, $id_estado)";
+        $sql = "INSERT INTO usuarios (usuario, clave, correo, id_rol, id_estado) VALUES ('$usuario', '$password', '$correo', $id_rol, $id_estado)";
         
         if ($conn->query($sql) === TRUE) {
             $nuevo_usuario = [

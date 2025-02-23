@@ -34,50 +34,37 @@
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">¡Crea una cuenta!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" id="registerUserForm">
                                 <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                    <div class="col-sm-12 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="usuario" name="usuario"
+                                            placeholder="Ingrese nombre de usuario">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                    <input type="correo" class="form-control form-control-user" id="correo" name="correo"
+                                        placeholder="Ingrese correo">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        <input type="password" class="form-control form-control-user" name="password"
+                                            id="password" placeholder="Ingrese contraseña">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <input type="password" class="form-control form-control-user" name="password2"
+                                            id="password2" placeholder="Repita contraseña">
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">Registrar cuenta</button>
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                <a class="small" href="forgot-password.html">¿Has olvidado tu contraseña?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
+                                <a class="small" href="login.php">¿Ya tienes una cuenta? ¡Inicia sesión!</a>
                             </div>
                         </div>
                     </div>
@@ -96,7 +83,59 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
+<script>
+    $("#registerUserForm").submit(function (event) {
+        event.preventDefault(); // Evitar comportamiento predeterminado
+
+        const formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
+        const errores = [];
+        if($("#usuario").val() == ""){
+            errores.push("¡Ingrese usuario!");
+        }
+
+        if($("#correo").val() == ""){
+            errores.push("¡Ingrese correo!");
+        }
+
+        if($("#password").val() == ""){
+            errores.push("¡Ingrese contraseña!");
+        }
+
+        if($("#password").val() != $("#password2").val()){
+            errores.push("¡Contraseñas no coinciden!");
+        }
+
+        if(errores.length != 0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: errores.join("<br>"),
+            });
+        }
+
+       $.ajax({
+            url: "http://localhost/codigo%20m/back/usuario.php",
+            method: "POST",
+            contentType: "application/json",
+            data: formData,
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Usuario creado',
+                    text: 'Usuario creado con exito',
+                }).then(function() {
+                    $('#registerUserForm')[0].reset();
+                    window.location = "login.php";
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al enviar los datos:", error);
+                alert("Hubo un error al enviar el formulario.");
+            }
+        });
+    });
+</script>
