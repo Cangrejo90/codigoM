@@ -25,7 +25,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>Medusa Admin</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -100,12 +100,14 @@
                         <i class="fas fa-fw fa-users"></i>
                         <span>Perfiles</span></a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="configuraciones.php">
+                        <i class="fas fa-fw fa-user-cog"></i>
+                        <span>Configuracion</span></a>
+                </li>
             <?php } ?>
-            <li class="nav-item">
-                <a class="nav-link" href="configuraciones.php">
-                    <i class="fas fa-fw fa-user-cog"></i>
-                    <span>Configuracion</span></a>
-            </li>
+            
 <!--
             <hr class="sidebar-divider">
 

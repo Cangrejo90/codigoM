@@ -1,27 +1,31 @@
 <?php 
-use PHPMailer\PHPMailer;
-use PHPMailer\Exception;
 
-require 'PHPMailer/Exception.php';
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
+use PHPMailer\PHPMailer\PHPMailer;
+
+require_once 'PHPMailer/Exception.php';
+require_once 'PHPMailer/PHPMailer.php';
+require_once 'PHPMailer/SMTP.php';
 
 $mail = new PHPMailer(true);
+
+
+
+
 
 try{
     $mail->isSMTP();
     $mail->SMTPAuth = true;
-    $mail->Username = $emailFromConfig->getValor();
-    $mail->Password = $emailPassConfig->getValor();
-    $mail->SMTPSecure = $emailSecureConfig->getValor();
-    $mail->Port = $emailPortConfig->getValor();
-    $mail->Host = $emailHostConfig->getValor();
+    $mail->Username = "contacto.codigomedusa@gmail.com";
+    $mail->Password = "kiom ihxi tjcm mzht";
+    $mail->SMTPSecure = "ssl";
+    $mail->Port = 465;
+    $mail->Host = "smtp.gmail.com";
     
     $mail->SMTPDebug = 0;
-    $mail->setFrom("luis.gnr@hotmail.com");
-    $mail->addAddress($item);
-    $mail->Subject = $email->getAsunto();
-    $mail->Body = $email->getMensaje();
+    $mail->setFrom('contacto.codigomedusa@gmail.com', 'Codigo M');
+    $mail->addAddress("luis.gnr@hotmail.com");
+    $mail->Subject = "PHPMailer Gmail";
+    $mail->Body = "This is the HTML message body in bold!";
     $mail->CharSet = "UTF-8";
     $mail->send();
 }catch (Exception $e) {

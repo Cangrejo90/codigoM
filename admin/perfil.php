@@ -1,5 +1,6 @@
 <?php
 include('header.php');
+$user_id = $_SESSION['user_id'];
 ?>
 
 <h1 class="h3 mb-2 text-gray-800">Perfil</h1>
@@ -8,6 +9,7 @@ include('header.php');
     
     <div class="card-body">
         <form id="crearPerfilForm">
+            <input type="hidden" id="id" name="id" value="">
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="nombre">Nombre</label>
@@ -98,7 +100,7 @@ include('header.php');
             </div>
             <div class="row">
                 <div class="col-12 text-right">
-                    <button type="submit" class="btn btn-primary">Crear</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
         </form>
@@ -139,8 +141,8 @@ include('footer.php');  // Incluir el archivo footer.php
 
 
     $(document).ready(function () {
-        cargarSelect("http://localhost/codigo%20m/back/ciudades.php", $("#selectCiudad"), "Selecciona una ciudad");
-        cargarSelect("http://localhost/codigo%20m/back/generos.php", $("#selectGenero"), "Selecciona un género");
+        cargarSelect(baseUrl + "ciudades.php", $("#selectCiudad"), "Selecciona una ciudad");
+        cargarSelect(baseUrl + "generos.php", $("#selectGenero"), "Selecciona un género");
 
         cargarPerfil();
     });
@@ -166,10 +168,11 @@ include('footer.php');  // Incluir el archivo footer.php
 
     function cargarPerfil() {
         $.ajax({
-            url: "http://localhost/codigo%20m/back/perfiles.php?id_usuario=4",
+            url: baseUrl + "perfiles.php?id_usuario=<?=$user_id?>",
             method: "GET",
             dataType: "json",
             success: function (data) {
+                $('#id').val(data.id)
                 $('#nombre').val(data.nombre);
                 $('#valor').val(data.valor);
                 $('#descripcion').val(data.descripcion);
@@ -177,8 +180,8 @@ include('footer.php');  // Incluir el archivo footer.php
                 $('#telefono').val(data.telefono);
                 $('#redes').val(data.redes);
                 $('#edad').val(data.edad);
-                $('#selectCiudad').val(data.id_ciudad);
-                $('#selectGenero').val(data.id_genero);
+                $('#selectCiudad ').val(data.id_ciudad).change();;
+                $('#selectGenero').val(data.id_genero).change();;
                 $('#medidas').val(data.medidas);
                 $('#peso').val(data.peso);
                 $('#altura').val(data.altura);
@@ -223,7 +226,7 @@ include('footer.php');  // Incluir el archivo footer.php
             formData.append('id_usuario', 4);  // Aquí añades el id de forma correcta
 
             $.ajax({
-                url: 'http://localhost/codigo%20m/back/process-file.php', 
+                url: baseUrl + 'process-file.php', 
                 type: 'POST',
                 data: formData,
                 processData: false,  // No procesar los datos automáticamente
@@ -267,19 +270,27 @@ include('footer.php');  // Incluir el archivo footer.php
         event.preventDefault(); // Evitar comportamiento predeterminado
 
         const formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
-
+        let idPerfil =  $("#id").val();    
+        let method = "POST";
+        if(idPerfil){
+            method = "PUT";
+        }
         $.ajax({
-            url: "http://localhost/codigo%20m/back/perfiles.php",
-            method: "POST",
+            url: baseUrl + "perfiles.php",
+            method: method,
             contentType: "application/json",
             data: formData,
             success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Perfil creado',
-                    text: response.message || 'Perfil creado con exito',
-                });
-                console.log(response);
+                if(response.error){
+                    console.log(response);
+                }
+                else{
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Perfil creado',
+                        text: response.message || 'Perfil creado con exito',
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error al enviar los datos:", error);

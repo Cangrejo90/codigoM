@@ -19,20 +19,20 @@
             <li><a href="#classic">Classic</a></li>
         </ul>
         <ul>
-            <li><a href="#" class="anuncio">Publica con nosotros</a></li>
+            <li><a href="register.html" class="anuncio">Publica con nosotros</a></li>
         </ul>
     </div>
     <a href="#home" class="top">↑</a>
     <div class="content">
         <div class="content-top">
-            <h1><span>18</span> escorts disponibles en <span>Santiago, Las Condes</span></h1>
+            <h1><span id="disponibles"></span> escorts disponibles en <span>Santiago, Las Condes</span></h1>
             <div class="filter">
                 <a href="#"><span>Santiago, Las Condes</span></a>
             </div>
         </div>
         <div class="premium">
             <h2>Premium <a name="premium"></a></h2>
-            <ul class="escort">
+            <ul class="escort" id="premiumPerfil">
                 <li>
                     <a href="ficha.html" class="card">
                         <div class="picture">
@@ -45,7 +45,7 @@
                         </div>
                     </a>
                 </li>
-                <li>
+                <!--<li>
                     <a href="ficha.html" class="card">
                         <div class="picture">
                             <img src="img/demo-2.jpg" alt="">
@@ -176,12 +176,12 @@
                             <p>Santiago, Las Condes</p>
                         </div>
                     </a>
-                </li>                
+                </li>    -->            
             </ul>            
         </div>
         <div class="vip">
             <h2>Vip <a name="vip"></a></h2>
-            <ul class="escort">
+            <ul class="escort" id="vipPerfil">
                 <li>
                     <a href="ficha.html" class="card">
                         <div class="picture">
@@ -194,7 +194,7 @@
                         </div>
                     </a>
                 </li>
-                <li>
+               <!--<li>
                     <a href="ficha.html" class="card">
                         <div class="picture">
                             <img src="img/demo-2.jpg" alt="">
@@ -229,12 +229,12 @@
                             <p>Santiago, Las Condes</p>
                         </div>
                     </a>
-                </li>
+                </li>-->
             </ul>
         </div>
         <div class="classic">
             <h2>Classic <a name="classic"></a></h2>
-            <ul class="escort">
+            <ul class="escort" id="classicPerfil">
                 <li>
                     <a href="ficha.html" class="card">
                         <div class="picture">
@@ -247,7 +247,7 @@
                         </div>
                     </a>
                 </li>
-                <li>
+                <!--<li>
                     <a href="ficha.html" class="card">
                         <div class="picture">
                             <img src="img/demo-2.jpg" alt="">
@@ -270,7 +270,7 @@
                             <p>Santiago, Las Condes</p>
                         </div>
                     </a>
-                </li>
+                </li>-->
             </ul>
         </div>
     </div>
@@ -280,3 +280,68 @@
     </div>
 </body>
 </html>
+    <!-- Bootstrap core JavaScript-->
+    <script src="admin/vendor/jquery/jquery.min.js"></script>
+    <script src="admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="admin/js/sb-admin-2.min.js"></script>
+<script>
+    let ciudades = [];
+    $(document).ready(function () {
+        loadAllPerfiles();
+    });
+
+    function loadAllPerfiles() {
+        $.ajax({
+            url: 'http://localhost/codigo%20m/back/perfiles.php?all',
+            method: "GET",
+            dataType: "json",
+            success: function (perfiles) {
+                $("#disponibles").html(perfiles.length);
+                perfiles.forEach((perfil) => {
+                    let disponible = perfil.disponible == 1? 'active':'pronto';
+                    let body = '\<li>\
+                                <a href="ficha.php?id='+perfil.id+'" class="card">\
+                                    <div class="picture">\
+                                        <img src="back/' + perfil.foto +'" alt="">\
+                                    </div>\
+                                    <div class="info-card">\
+                                        <h3><span class="' + disponible +'"></span> '+ perfil.nombre +' | '+ perfil.edad+'</h3>\
+                                        <p>'+ format1(perfil.valor) +'.- hora</p>\
+                                        <p>'+ perfil.ciudad +'</p>\
+                                    </div>\
+                                </a>\
+                            </li>\
+                            ';
+                    switch (perfil.id_tipo_perfil) {
+                        case "1":
+                            $('#premiumPerfil').append(body);
+                            break;
+                        case "2":
+                            $('#vipPerfil').append(body);
+                            break;  
+                        default:
+                            $('#classicPerfil').append(body);
+                            break;
+                    }
+                    
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde ${endpoint}:`, error);
+                selectElement.html(`<option value="">Error al cargar datos</option>`);
+            }
+        });
+    }
+
+    function format1(n) {
+        let x = Number(n);
+        return '$' + x.toFixed(0).replace(/./g, function(c, i, a) {
+            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c;
+        });
+    }
+</script>

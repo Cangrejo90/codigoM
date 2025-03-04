@@ -26,7 +26,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Si no se encuentra la foto, devolver un mensaje de error
             echo json_encode(["error" => "Foto no encontrada"]);
         }
-    } else {
+    }if (isset($_GET['id_usuario'])) {
+        // Obtener el ID de la foto desde la URL
+        $id_usuario = $_GET['id_usuario'];
+
+        // Consulta para obtener la foto por ID
+        $sql = "SELECT id, url_foto, id_usuario, visible FROM fotos WHERE id_usuario = $id_usuario";
+        $result = $conn->query($sql);
+
+        // Verificar si se encontró la foto
+        if ($result->num_rows > 0) {
+            // Crear un array para almacenar las fotos
+            $fotos = [];
+
+            // Obtener cada fila de la consulta y agregarla al array
+            while($row = $result->fetch_assoc()) {
+                $fotos[] = $row;
+            }
+
+            // Devolver todas las fotos en formato JSON
+            echo json_encode($fotos);
+        } else {
+            // Si no hay fotos, devolver un array vacío
+            echo json_encode([]);
+        }
+    }if (isset($_GET['id_perfil'])) {
+        // Obtener el ID de la foto desde la URL
+        $id_perfil = $_GET['id_perfil'];
+
+        // Consulta para obtener la foto por ID
+        $sql = "SELECT url_foto FROM `fotos`
+                LEFT JOIN perfiles ON perfiles.id_usuario = fotos.id_usuario
+                WHERE perfiles.id = $id_perfil AND fotos.visible = 1;";
+        $result = $conn->query($sql);
+
+        // Verificar si se encontró la foto
+        if ($result->num_rows > 0) {
+            // Crear un array para almacenar las fotos
+            $fotos = [];
+
+            // Obtener cada fila de la consulta y agregarla al array
+            while($row = $result->fetch_assoc()) {
+                $fotos[] = $row;
+            }
+
+            // Devolver todas las fotos en formato JSON
+            echo json_encode($fotos);
+        } else {
+            // Si no hay fotos, devolver un array vacío
+            echo json_encode([]);
+        }
+    }else {
         // Si no se pasó un ID, obtener todas las fotos
         $sql = "SELECT id, url_foto, id_usuario, visible FROM fotos";
         $result = $conn->query($sql);
