@@ -98,6 +98,20 @@ $user_id = $_SESSION['user_id'];
                     </select>
                 </div>
             </div>
+            <hr>
+            <div class="form-group">
+                <h4>Servicios incluidos</h4>
+                <div id="serviciosIncluidosContainer" style="columns:3">
+                </div>
+                <input type="hidden" id="txtServicioIncluidos" name="txtServicioIncluidos">
+            </div>
+            <hr>
+            <div class="form-group">
+                <h4>Servicios adicionales</h4>
+                <div id="serviciosAdicionalesContainer" style="columns:3">
+                </div>
+                <input type="hidden" id="txtServicioAdicionales" name="txtServicioAdicionales">
+            </div>
             <div class="row">
                 <div class="col-12 text-right">
                     <button type="submit" class="btn btn-primary">Guardar</button>
@@ -188,6 +202,10 @@ include('footer.php');  // Incluir el archivo footer.php
                 $('#disponible').val(data.disponible);
                 $('#visible').val(data.visible);
                 $('#verificada').val(data.verificada);
+                $('#txtServicioIncluidos').val(data.servicios);
+                $('#txtServicioAdicionales').val(data.servicios_adicionales);
+                cargarServicios();
+                cargarServiciosAdicionales();
             },
             error: function (xhr, status, error) {
                 console.error(`Error al cargar datos desde perfil:`);
@@ -269,12 +287,13 @@ include('footer.php');  // Incluir el archivo footer.php
     $("#crearPerfilForm").submit(function (event) {
         event.preventDefault(); // Evitar comportamiento predeterminado
 
-        const formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
-        let idPerfil =  $("#id").val();    
+        let formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
+        let idPerfil =  $("#id").val();
         let method = "POST";
         if(idPerfil){
             method = "PUT";
         }
+
         $.ajax({
             url: baseUrl + "perfiles.php",
             method: method,
@@ -298,4 +317,71 @@ include('footer.php');  // Incluir el archivo footer.php
             }
         });
     });
+
+    function cargarServicios() {
+        const servicios = $("#txtServicioIncluidos").val().split(',');
+        $.ajax({
+            url: baseUrl + "servicios.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                data.forEach(element => {
+                    const isCheck = servicios.find((x) => x == element.id) != undefined;
+                    $('#serviciosIncluidosContainer').append(`
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input check-incluidos" ${isCheck?"checked":""}
+                            id="${element.id}_1" value="${element.id}" onchange="toggleCheckbox(this)">
+                            <label class="form-check-label" for="${element.id}_1">${element.descripcion}</label>
+                        </div>
+                    `);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde perfil:`);
+            }
+        });
+    }
+
+    function cargarServiciosAdicionales() {
+        const servicios = $("#txtServicioAdicionales").val().split(',');
+        $.ajax({
+            url: baseUrl + "servicios_adicionales.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                data.forEach(element => {
+                    const isCheck = servicios.find((x) => x == element.id) != undefined;
+                    $('#serviciosAdicionalesContainer').append(`
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input check-adicionales" ${isCheck?"checked":""}
+                            id="${element.id}_2" value="${element.id}" onchange="toggleCheckbox(this)">
+                            <label class="form-check-label" for="${element.id}_2">${element.descripcion}</label>
+                        </div>
+                    `);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde perfil:`);
+            }
+        });
+    }
+
+    function toggleCheckbox() {
+        const checkServicios = $(".check-incluidos:checkbox:checked");
+        const checkServicios2 = $(".check-adicionales:checkbox:checked");
+
+        let check = [];
+        let check2 = [];
+        for (let index = 0; index < checkServicios.length; index++) {
+            check.push(checkServicios[index].value);
+        }
+        for (let index = 0; index < checkServicios2.length; index++) {
+            check2.push(checkServicios2[index].value);
+        }
+        let serviciosIncluidos = check.join(',');
+        let serviciosAdicionales = check2.join(',');
+
+        $("#txtServicioIncluidos").val(serviciosIncluidos);
+        $("#txtServicioAdicionales").val(serviciosAdicionales);
+    }
 </script>

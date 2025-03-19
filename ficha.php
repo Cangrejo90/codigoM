@@ -47,34 +47,11 @@
         </div>
         <div class="service">
             <h2>Servicios incluidos</h2>
-            <ul class="service-include">
-                <li>
-                    <p>la que te gusta</p>
-                </li>
-                <li>
-                    <p>la que te gusta</p>
-                </li>
-                <li>
-                    <p>la que te gusta</p>
-                </li>
-                <li>
-                    <p>la que te gusta</p>
-                </li>
+            <ul class="service-include" id="service-include">
+                
             </ul>
             <h2>Servicios adicionales</h2>
-            <ul class="service-add">
-                <li>
-                    <p>la que te gusta</p>
-                </li>
-                <li>
-                    <p>la que te gusta</p>
-                </li>
-                <li>
-                    <p>la que te gusta</p>
-                </li>
-                <li>
-                    <p>la que te gusta</p>
-                </li>
+            <ul class="service-add" id="service-add">
             </ul>
         </div>
         <h2>Galería</h2>
@@ -97,7 +74,8 @@
 <script src="admin/js/sb-admin-2.min.js"></script>
 <script>
     const baseUrl = "http://localhost/codigo%20m/back/";
-    
+    let servicioIds = "";
+    let servicio2Ids = "";
     Fancybox.bind("[data-fancybox]", {
     // Your custom options
     });
@@ -105,6 +83,15 @@
     $(document).ready(function () {
         loadPerfil();
         loadFotos();
+        if(localStorage.getItem("servicios") == null || localStorage.getItem("serviciosAdicionales") == null){
+            cargarServicios();
+            cargarServiciosAdicionales();
+            setTimeout(() => {
+                loadService();
+            }, 1000);
+        }else{
+
+        }
     });
 
     function loadPerfil() {
@@ -118,12 +105,14 @@
                 let disponible = perfil.disponible == 1? 'active':'pronto';
                 let title = '' + perfil.nombre + '<span> | ' + perfil.edad + ' años</span> <div class="' + disponible + '"></div>';
 
-
                 $("#spanNombre").html(perfil.nombre);
                 $("#h1Nombre").html(title);
                 $("#pDescripcion").html(perfil.descripcion);
                 $("#spanContacto").html(perfil.telefono);
                 $("#spanValor").html(perfil.valor);
+                servicioIds = perfil.servicios.split(',');
+                servicio2Ids = perfil.servicios_adicionales.split(',');
+                loadService();
             },
             error: function (xhr, status, error) {
                 console.error(`Error al cargar datos desde ${endpoint}:`, error);
@@ -162,6 +151,59 @@
         let x = Number(n);
         return '$' + x.toFixed(0).replace(/./g, function(c, i, a) {
             return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c;
+        });
+    }
+
+    function cargarServicios() {
+        $.ajax({
+            url: "http://localhost/codigo%20m/back/servicios.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                localStorage.setItem('servicios', JSON.stringify(data));
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde perfil:`);
+            }
+        });
+    }
+
+    function cargarServiciosAdicionales() {
+        $.ajax({
+            url: "http://localhost/codigo%20m/back/servicios_adicionales.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                localStorage.setItem('serviciosAdicionales', JSON.stringify(data));
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde perfil:`);
+            }
+        });
+    }
+
+    function loadService() {
+        $("#service-include").html("");
+        $("#service-add").html("");
+
+        const servicios = JSON.parse(localStorage.getItem("servicios"));
+        servicioIds.forEach(element => {
+            const servicio = servicios.find((x) => x.id == element);
+            if(servicio != undefined){
+                $("#service-include").append(`<li>
+                    <p>${servicio.descripcion}</p>
+                </li>`);
+            }
+        });
+
+        const servicios2 = JSON.parse(localStorage.getItem("serviciosAdicionales"));
+        servicio2Ids.forEach(element => {
+            const servicio = servicios2.find((x) => x.id == element);
+            if(servicio != undefined){
+                $("#service-add").append(`<li>
+                    <p>${servicio.descripcion}</p>
+                </li>`);
+            }
         });
     }
 </script>

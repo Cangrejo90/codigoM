@@ -293,6 +293,8 @@
     let ciudades = [];
     $(document).ready(function () {
         loadAllPerfiles();
+        cargarServicios();
+        cargarServiciosAdicionales();
     });
 
     function loadAllPerfiles() {
@@ -323,7 +325,7 @@
                             break;
                         case "2":
                             $('#vipPerfil').append(body);
-                            break;  
+                            break;
                         default:
                             $('#classicPerfil').append(body);
                             break;
@@ -342,6 +344,34 @@
         let x = Number(n);
         return '$' + x.toFixed(0).replace(/./g, function(c, i, a) {
             return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c;
+        });
+    }
+
+    function cargarServicios() {
+        $.ajax({
+            url: "http://localhost/codigo%20m/back/servicios.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                localStorage.setItem('servicios', JSON.stringify(data));
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde perfil:`);
+            }
+        });
+    }
+
+    function cargarServiciosAdicionales() {
+        $.ajax({
+            url: "http://localhost/codigo%20m/back/servicios_adicionales.php",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                localStorage.setItem('serviciosAdicionales', JSON.stringify(data));
+            },
+            error: function (xhr, status, error) {
+                console.error(`Error al cargar datos desde perfil:`);
+            }
         });
     }
 </script>

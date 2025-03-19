@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id = $_GET['id'];
 
         // Consulta para obtener el perfil por ID
-        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id = $id AND id_estado = 1";
+        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada, servicios, servicios_adicionales FROM perfiles WHERE id = $id AND id_estado = 1";
         $result = $conn->query($sql);
 
         // Verificar si se encontró el perfil
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id_usuario = $_GET['id_usuario'];
 
         // Consulta para obtener el perfil por ID
-        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada FROM perfiles WHERE id_usuario = $id_usuario AND id_estado = 1";
+        $sql = "SELECT id, descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_sector, id_genero, medidas, peso, altura, disponible, visible, verificada , servicios, servicios_adicionales FROM perfiles WHERE id_usuario = $id_usuario AND id_estado = 1";
         $result = $conn->query($sql);
 
         // Verificar si se encontró el perfil
@@ -115,9 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $disponible = $data['disponible'];
         $visible = $data['visible'];
         $verificada = 0;
+        $servicios = $data['txtServicioIncluidos'];
+        $servicios_adicionales = $data['txtServicioAdicionales'];
 
-        $sql = "INSERT INTO perfiles (descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_genero, medidas, peso, altura, disponible, visible, verificada) 
-                VALUES ('$descripcion', '$descripcion_corta', '$nombre', '$valor', '$telefono', '$redes', $edad, $id_ciudad, $id_genero, '$medidas', $peso, $altura, $disponible, $visible, $verificada)";
+        $sql = "INSERT INTO perfiles (descripcion, descripcion_corta, nombre, valor, telefono, redes, edad, id_ciudad, id_genero, medidas, peso, altura, disponible, visible, verificada,servicios,servicios_adicionales) 
+                VALUES ('$descripcion', '$descripcion_corta', '$nombre', '$valor', '$telefono', '$redes', $edad, $id_ciudad, $id_genero, '$medidas', $peso, $altura, $disponible, $visible, $verificada,$servicios,$servicios_adicionales)";
 
         if ($conn->query($sql) === TRUE) {
             $nuevo_perfil = [
@@ -136,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'altura' => $altura,
                 'disponible' => $disponible,
                 'visible' => $visible,
-                'verificada' => $verificada
+                'verificada' => $verificada,
             ];
             echo json_encode($nuevo_perfil);
         } else {
@@ -173,12 +175,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $altura = $data['altura'];
         $disponible = $data['disponible'];
         $visible = $data['visible'];
+        $servicios = $data['txtServicioIncluidos'];
+        $servicios_adicionales = $data['txtServicioAdicionales'];
 
         // Consulta para actualizar los datos del perfil
         $sql = "UPDATE perfiles SET descripcion = '$descripcion', descripcion_corta = '$descripcion_corta', 
         nombre = '$nombre', valor = $valor, telefono = '$telefono', redes = '$redes', edad = $edad, 
         id_ciudad = $id_ciudad, id_genero = $id_genero, medidas = '$medidas', peso = $peso, altura = $altura, 
-        disponible = $disponible, visible = $visible WHERE id = $id";
+        disponible = $disponible, visible = $visible, servicios = '$servicios', servicios_adicionales = '$servicios_adicionales' WHERE id = $id";
 
         if ($conn->query($sql) === TRUE) {
             // Si la actualización es exitosa, devolver los datos actualizados
