@@ -34,8 +34,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
+    if (isset($_GET['key']) && isset($data['password']) && isset($data['password2'])) {
+        $password = md5($data['password']); 
 
-    if (isset($data['usuario']) && isset($data['password']) && isset($data['correo'])) {
+        $key_restore = $_GET['key'];
+
+        $sql = "SELECT key_restore,id_usuario FROM codigo_restore WHERE key_restore = '$key_restore'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $idUsuario = $row["id_usuario"];
+
+            $sql = "UPDATE `usuarios` SET `clave` = '$password' WHERE `usuarios`.`id` = $idUsuario;";
+        
+            if ($conn->query($sql) === true) {
+                $sql = "DELETE FROM codigo_restore WHERE key_restore = '$key_restore'";
+                $conn->query($sql);
+                echo json_encode("OK");
+            } else {
+                echo json_encode(["error" => "Error al cambiar contraseña: " . $conn->error]);
+            }
+        } else {
+            echo json_encode(["error" => "Error al cambiar contraseña: " . $conn->error]);
+        }
+    }elseif (isset($data['usuario']) && isset($data['password']) && isset($data['correo'])) {
         $usuario = $data['usuario'];
         $password = password_hash($data['password'], PASSWORD_BCRYPT); 
         $correo = $data['correo'];

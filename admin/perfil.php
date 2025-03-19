@@ -158,7 +158,9 @@ include('footer.php');  // Incluir el archivo footer.php
         cargarSelect(baseUrl + "ciudades.php", $("#selectCiudad"), "Selecciona una ciudad");
         cargarSelect(baseUrl + "generos.php", $("#selectGenero"), "Selecciona un género");
 
-        cargarPerfil();
+        setTimeout(() => {
+            cargarPerfil();
+        }, 2000);
     });
 
     

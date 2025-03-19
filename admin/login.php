@@ -9,8 +9,8 @@ if (isset($_SESSION['user_id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo = $_POST['correo'];
-    $clave = $_POST['clave'];
-
+    $clave = md5($_POST['clave']);
+    
     require_once '../back/conexion.php';
 
     // Prevenir inyección SQL (usa parámetros en lugar de concatenar)
