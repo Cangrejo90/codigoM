@@ -1,12 +1,11 @@
 .div-footer-card{
-    display: flex;justify-content: end;
+  display: flex;justify-content: end;
 }
 
 #accordionSidebar .nav-item .nav-link i {
-    font-size: 20px; /* Aumenta el tamaño del ícono */
-  }
-  
-  #accordionSidebar .nav-item .nav-link span {
-    font-size: 20px; /* Aumenta el tamaño del texto */
-  }
-  
+  font-size: 20px; /* Aumenta el tamaño del ícono */
+}
+
+#accordionSidebar .nav-item .nav-link span {
+  font-size: 20px; /* Aumenta el tamaño del texto */
+}
