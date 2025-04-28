@@ -62,22 +62,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $usuario = $data['usuario'];
         $password = password_hash($data['password'], PASSWORD_BCRYPT); 
         $correo = $data['correo'];
-        $id_rol = 3;
-        $id_estado = 1;
 
-        $sql = "INSERT INTO usuarios (usuario, clave, correo, id_rol, id_estado) VALUES ('$usuario', '$password', '$correo', $id_rol, $id_estado)";
-        
-        if ($conn->query($sql) === TRUE) {
-            $nuevo_usuario = [
-                'id' => $conn->insert_id,
-                'usuario' => $usuario,
-                'correo' => $correo,
-                'id_rol' => $id_rol,
-                'id_estado' => $id_estado
-            ];
-            echo json_encode($nuevo_usuario);
+        $sql = "SELECT id, usuario, correo FROM usuarios WHERE correo = '$correo'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            echo json_encode(["error" => "Usuario ya existe"]);
         } else {
-            echo json_encode(["error" => "Error al insertar el usuario: " . $conn->error]);
+            $id_rol = 3;
+            $id_estado = 1;
+    
+            $sql = "INSERT INTO usuarios (usuario, clave, correo, id_rol, id_estado) VALUES ('$usuario', '$password', '$correo', $id_rol, $id_estado)";
+            
+            if ($conn->query($sql) === TRUE) {
+                $nuevo_usuario = [
+                    'id' => $conn->insert_id,
+                    'usuario' => $usuario,
+                    'correo' => $correo,
+                    'id_rol' => $id_rol,
+                    'id_estado' => $id_estado
+                ];
+                echo json_encode($nuevo_usuario);
+            } else {
+                echo json_encode(["error" => "Error al insertar el usuario: " . $conn->error]);
+            }
         }
     } else {
         echo json_encode(["error" => "Faltan datos para crear el usuario"]);

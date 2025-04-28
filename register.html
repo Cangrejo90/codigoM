@@ -123,14 +123,24 @@
             contentType: "application/json",
             data: formData,
             success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Usuario creado',
-                    text: 'Usuario creado con exito',
-                }).then(function() {
-                    $('#registerUserForm')[0].reset();
-                    window.location = "admin/login.php";
-                });
+                if(response.error){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuario ya exite',
+                        text: 'Usuario ya fue creado anteriormente',
+                    }).then(function() {
+                        $('#registerUserForm')[0].reset();
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Usuario creado',
+                        text: 'Usuario creado con exito',
+                    }).then(function() {
+                        $('#registerUserForm')[0].reset();
+                        window.location = "admin/login.php";
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Error al enviar los datos:", error);

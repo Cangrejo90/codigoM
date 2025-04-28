@@ -3,6 +3,7 @@ require_once 'conexion.php';
 
 header('Content-Type: application/json');
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];

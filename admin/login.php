@@ -2,17 +2,18 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: perfil.php");
+    header("Location:perfil.php");
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_POST = json_decode(file_get_contents("php://input"), true);
     $correo = $_POST['correo'];
     $clave = md5($_POST['clave']);
 
     require_once '../back/conexion.php';
 
-    $stmt = $conn->prepare("SELECT id, correo FROM usuarios WHERE correo = ? AND clave = ?");
+    $stmt = $conn->prepare("SELECT id, correo, usuario, id_rol FROM usuarios WHERE correo = ? AND clave = ?");
     $stmt->bind_param("ss", $correo, $clave);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -20,16 +21,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result->num_rows > 0) {
         $usuario = $result->fetch_assoc();
 
+        $cookie = md5($usuario['correo'] . time());
         // Configura la sesión
         $_SESSION['user_id'] = $usuario['id'];
         $_SESSION['correo'] = $usuario['correo'];
         $_SESSION['usuario'] = $usuario['usuario'];
         $_SESSION['id_rol'] = $usuario['id_rol'];
+        $_SESSION['session_info'] = array(
+            "login" => true,
+            "data" => array(
+               "user_id" => $usuario["id"],
+               "email" => $usuario["correo"], 
+               "time" => time() +3600*24*30,
+               "key" => $cookie
+              )
+        );
+        setcookie('remember_me', $cookie, time() +3600*24*30);
         // Redirige al perfil
-        header("Location: perfil.php");
+        echo "OK";
         exit;
     } else {
         echo "Credenciales incorrectas. Intenta nuevamente.";
+        exit;
     }
 }
 ?>
@@ -118,9 +131,7 @@ include('footer.php');
 <script>
     $('#loginForm').on('submit', function (event) {
         event.preventDefault();
-        let formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
-        $("html").css("opacity","0.8");
-        $("#loadContainer").removeClass("hidden")
+        const formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
         $.ajax({
             url: 'http://localhost/codigo%20m/admin/login.php', 
             type: 'POST',
@@ -128,9 +139,17 @@ include('footer.php');
             processData: false,
             contentType: false,
             success: function (response) {
+                if(response == "OK"){
+                    window.location.href = "perfil.php";
+                }else{
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: response,
+                });
+                }
             },
             error: function (error) {
-                debugger;
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

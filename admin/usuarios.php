@@ -161,7 +161,6 @@ include('footer.php');  // Incluir el archivo footer.php
         }
 
         const formData = JSON.stringify(Object.fromEntries(new FormData(this).entries()));
-        debugger;
         $.ajax({
             url: 'http://localhost/codigo%20m/back/usuario.php',
             type: 'POST',

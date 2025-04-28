@@ -1,6 +1,7 @@
 <?php
 include('header.php');
 $user_id = $_SESSION['user_id'];
+$key = $_SESSION["session_info"]["data"]["key"];
 ?>
 
 <h1 class="h3 mb-2 text-gray-800">Perfil</h1>
@@ -169,6 +170,8 @@ include('footer.php');  // Incluir el archivo footer.php
             url: endpoint,
             method: "GET",
             dataType: "json",
+            xhrFields: { withCredentials: true },
+            headers : { 'api-key' : '<?=$key;?>'},
             success: function (data) {
                 selectElement.empty().append(`<option value="">${placeholder}</option>`);
                 data.forEach(item => {
